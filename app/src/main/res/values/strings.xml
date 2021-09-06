@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Parkee Movie</string>
+    <string name="api_key">decd877991d8fd20600639d54e114e35</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="favorite_title">Favorite Movie</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="popular_movie">Popular Movie</string>
+    <string name="top_rated">Top Rated</string>
+    <string name="now_playing">Now Playing</string>
+    <string name="favorite">Favorite</string>
+    <string name="author">Review by %s</string>
+    <string name="share_button">Share Button</string>
+    <string name="release">Release date: %s</string>
+    <string name="overview">Overview</string>
+    <string name="review">Review</string>
+    <string name="explore_movie">Explore Movie</string>
+</resources>
