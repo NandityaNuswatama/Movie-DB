@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.nandits.parkee_movie.ui.main.MainFragment"
+        android:name="com.nandits.movieDb.ui.main.MainFragment"
         android:label="fragment_main"
         tools:layout="@layout/fragment_main" >
         <action
@@ -19,12 +19,12 @@
     </fragment>
     <fragment
         android:id="@+id/detailFragment"
-        android:name="com.nandits.parkee_movie.ui.detail.DetailFragment"
+        android:name="com.nandits.movieDb.ui.detail.DetailFragment"
         android:label="fragment_detail"
         tools:layout="@layout/fragment_detail" />
     <fragment
         android:id="@+id/favoriteFragment"
-        android:name="com.nandits.parkee_movie.ui.favorite.FavoriteFragment"
+        android:name="com.nandits.movieDb.ui.favorite.FavoriteFragment"
         android:label="fragment_favorite"
         tools:layout="@layout/fragment_favorite" >
         <action
