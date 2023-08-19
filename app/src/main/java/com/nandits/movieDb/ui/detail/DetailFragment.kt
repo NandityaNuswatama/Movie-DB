@@ -4,18 +4,16 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isGone
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.nandits.movieDb.R
 import com.nandits.movieDb.data.Resource
+import com.nandits.movieDb.data.base.BaseFragment
 import com.nandits.movieDb.data.local.EntityMovie
 import com.nandits.movieDb.data.model.MovieModel
 import com.nandits.movieDb.data.model.ReviewModel
@@ -25,31 +23,38 @@ import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
 @AndroidEntryPoint
-class DetailFragment : Fragment() {
-    private var _binding: FragmentDetailBinding? = null
-    private val binding get() = _binding!!
+class DetailFragment : BaseFragment<FragmentDetailBinding>() {
+
+    companion object {
+        const val TO_DETAIL = "to detail"
+    }
+
     private val movie by lazy {
         arguments?.getParcelable<MovieModel>(TO_DETAIL) as MovieModel
     }
+
     private val detailViewModel: DetailViewModel by viewModels()
-    
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentDetailBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-    
+
     @SuppressLint("RestrictedApi")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+    }
+
+    override fun initUI() {
         setMovie()
         loadReview()
-        initListener()
     }
-    
+
+    override fun initAction() {
+        with(binding) {
+            fabShare.setOnClickListener { shareAction() }
+            detailViewModel.isFavorite(movie.id as Int).observe(viewLifecycleOwner) {
+                setFav(it)
+            }
+        }
+    }
+
     private fun setMovie() {
         with(binding) {
             toolBar.setNavigationOnClickListener { findNavController().navigateUp() }
@@ -65,29 +70,22 @@ class DetailFragment : Fragment() {
     }
     
     private fun loadReview() {
-        movie.id?.let { detailViewModel.getReview(it) }?.observe(viewLifecycleOwner, {
+        movie.id?.let { detailViewModel.getReview(it) }?.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Loading -> {
                     loading(true)
                 }
+
                 is Resource.Error -> {
                     loading(false)
                     Timber.w(it.message)
                 }
+
                 is Resource.Success -> {
                     loading(false)
                     if (it.data != null) setReviewAdapter(it.data)
                 }
             }
-        })
-    }
-    
-    private fun initListener() {
-        with(binding) {
-            fabShare.setOnClickListener { shareAction() }
-            detailViewModel.isFavorite(movie.id as Int).observe(viewLifecycleOwner, {
-                setFav(it)
-            })
         }
     }
     
@@ -145,14 +143,5 @@ class DetailFragment : Fragment() {
             binding.fabFav.setImageResource(R.drawable.icon_fav_border)
             binding.fabFav.setOnClickListener { insertMovie() }
         }
-    }
-    
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-    
-    companion object {
-        const val TO_DETAIL = "to detail"
     }
 }
