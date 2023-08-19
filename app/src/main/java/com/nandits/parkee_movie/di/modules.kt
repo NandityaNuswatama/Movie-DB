@@ -2,6 +2,7 @@ package com.nandits.parkee_movie.di
 
 import android.content.Context
 import androidx.room.Room
+import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.nandits.parkee_movie.data.local.MovieDao
 import com.nandits.parkee_movie.data.local.MovieDatabase
 import com.nandits.parkee_movie.data.network.ApiService
@@ -20,10 +21,10 @@ import java.util.concurrent.TimeUnit
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
     @Provides
-    fun providerClient(): OkHttpClient {
+    fun providerClient(@ApplicationContext context: Context): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-            .connectTimeout(150, TimeUnit.SECONDS)
+            .addInterceptor(ChuckerInterceptor(context))
             .readTimeout(150, TimeUnit.SECONDS)
             .build()
     }
